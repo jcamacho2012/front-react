@@ -5,6 +5,7 @@ import { PersistGate } from 'redux-persist/integration/react'
 import { persistStore } from 'redux-persist'
 import sagas from './redux/sagas'
 import { store, history, sagaMiddleware } from './redux/store'
+import { connect } from 'react-redux'
 import restClient from './services/restClient'
 import authAction from './redux/user/actions'
 
@@ -33,17 +34,32 @@ class App extends Component {
 
     this.persistor = persistStore(store, undefined, () => {
       const profile = store.getState().user.profile
-      restClient.setTokenToAxio(profile ? profile.token : null)
-      restClient.setInterceptor(function () {
+      console.log("profile", profile)
+      if (profile == undefined) {
+        // restClient.setTokenToAxio(null)
         store.dispatch(logout())
-      })
+      } else {
+        restClient.setTokenToAxio(profile ? profile.token : null)
+      }
 
       sagaMiddleware.run(sagas)
       this.setState({ loaded: true })
 
+      // if (profile == null) {
+      //   this.props.history.push('/login');
+      // } else {
+      //   this.props.history.push('/dashboard');
+      // }
+
     })
+  }
+
+  componentWillMount() {
 
   }
+
+
+  //this.props.history.push('/dashboard');
 
   render() {
     return (

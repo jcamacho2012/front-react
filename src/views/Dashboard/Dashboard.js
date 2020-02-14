@@ -20,6 +20,7 @@ import {
   Row,
   Table,
 } from 'reactstrap';
+import { connect } from 'react-redux'
 import { CustomTooltips } from '@coreui/coreui-plugin-chartjs-custom-tooltips';
 import { getStyle, hexToRgba } from '@coreui/coreui/dist/js/coreui-utilities'
 import restClient from '../../services/restClient'
@@ -467,6 +468,7 @@ class Dashboard extends Component {
   }
 
   consultarPrueba = () => {
+    console.log("profile",this.props)
     restClient.getPrueba().then(response => {
       console.log("response dashboard", response)
     }).catch(error => {
@@ -1136,4 +1138,9 @@ class Dashboard extends Component {
   }
 }
 
-export default Dashboard;
+// export default Dashboard;
+export default connect(state => {
+  return {
+    profile: state.user,
+  }
+})(Dashboard)
